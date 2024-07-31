@@ -1,0 +1,19 @@
+body {
+    font-family: Arial, sans-serif;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+    cursor: pointer;
+}
+
+td.highlight {
+    background-color: yellow;
+}

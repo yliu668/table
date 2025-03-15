@@ -28,6 +28,7 @@
       font-size: 0.9em;
       vertical-align: middle;
       box-sizing: border-box;
+      transition: filter 0.2s ease-in-out, outline 0.2s ease-in-out;
     }
     th {
       background-color: #ddd;
@@ -44,18 +45,19 @@
       font-size: 0.8em;
       color: #555;
       display: block;
+      margin-top: 4px;
     }
-    /* Hover effect: use an outline and brightness change (without affecting layout) */
+    /* Hover effect: use an outline and brightness change without shifting layout */
     .hover-highlight {
       outline: 3px solid #333;
-      filter: brightness(1.1);
+      filter: brightness(1.2);
     }
   </style>
 </head>
 <body>
   <h1>Creativity Ontology Table</h1>
   <p style="text-align: center;">
-    Cells in columns 1–5 are color-coded by term. Hover over them to see a special effect.
+    Cells in columns 1–5 are color-coded by term. Hover over them to see a subtle effect.
   </p>
   <table id="dataTable">
     <thead>
@@ -174,8 +176,21 @@
   </table>
 
   <script>
-    // Color palette for default term backgrounds (applied only to columns 1–5)
-    const colors = ["#E8F1F2", "#F9E79F", "#AED6F1", "#D2B4DE", "#FADBD8", "#D5F5E3", "#FCF3CF"];
+    // Define a distinct, vivid color palette.
+    const colors = [
+      "#8e44ad", // Purple
+      "#27ae60", // Green
+      "#2980b9", // Blue
+      "#d35400", // Orange
+      "#c0392b", // Red
+      "#16a085", // Teal
+      "#f39c12", // Gold
+      "#2c3e50", // Dark Blue
+      "#e74c3c", // Bright Red
+      "#9b59b6", // Light Purple
+      "#1abc9c", // Light Teal
+      "#f1c40f"  // Yellow Gold
+    ];
 
     // Simple hash function to assign a color based on the term.
     function getColorForTerm(term) {
@@ -213,7 +228,7 @@
       return termElem ? termElem.innerText.trim() : cell.textContent.trim();
     }
 
-    // Add event listeners for hover highlighting for cells in columns 1–5 only.
+    // Add hover event listeners for cells in columns 1–5 only.
     cells.forEach(cell => {
       if (cell.cellIndex < 5) {
         cell.addEventListener('mouseover', function() {
@@ -236,6 +251,5 @@
   </script>
 </body>
 </html>
-
 
 

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Creativity Ontology Table</title>
   <style>
     body {
@@ -28,6 +28,7 @@
       font-size: 0.9em;
       vertical-align: middle;
       box-sizing: border-box;
+      transition: filter 0.2s ease, outline 0.2s ease;
     }
     th {
       background-color: #ddd;
@@ -46,17 +47,18 @@
       display: block;
       margin-top: 4px;
     }
-    /* Subtle hover highlight: a 2px outline (no layout shift) */
+    /* Hover effect: a darker 3px outline and slight brightness increase */
     .hover-highlight {
-      outline: 2px solid #444;
-      outline-offset: -2px; /* Keeps the outline inside the cell */
+      outline: 3px solid #222;
+      filter: brightness(1.1);
     }
   </style>
 </head>
 <body>
   <h1>Creativity Ontology Table</h1>
   <p style="text-align: center;">
-    Columns 1–5 are softly color-coded by term. Hover over them to see a subtle effect.
+    For columns 1–5, cells sharing the same term (ignoring stats) are color-coded only if the term appears more than once.
+    Hover over a cell to see a subtle highlight.
   </p>
   <table id="dataTable">
     <thead>
@@ -175,7 +177,7 @@
   </table>
 
   <script>
-    // A gentle pastel color palette for columns 1–5
+    // A gentle pastel palette for overlapping terms
     const colors = [
       "#d6eadf", // pastel green
       "#fde2e4", // very light red
@@ -189,7 +191,7 @@
       "#dff9fb"  // pale aqua
     ];
 
-    // Simple hash function to assign a color based on the term
+    // Simple hash function to assign a color based on the term.
     function getColorForTerm(term) {
       let hash = 0;
       for (let i = 0; i < term.length; i++) {
@@ -198,7 +200,7 @@
       return colors[Math.abs(hash) % colors.length];
     }
 
-    // Reformat cells: put the term in bold, stats in smaller text
+    // Reformat each cell: split term and stats into two separate lines.
     const cells = document.querySelectorAll('td.word');
     cells.forEach(cell => {
       const regex = /^(.*?)\s*(\(.+\))$/;
@@ -210,21 +212,34 @@
       }
     });
 
-    // Assign a pastel background color to columns 1–5 based on the term
+    // Count frequency of terms in columns 1–5.
+    const termFreq = {};
     cells.forEach(cell => {
       if (cell.cellIndex < 5) {
         const term = cell.querySelector('.term').innerText.trim();
-        cell.style.backgroundColor = getColorForTerm(term);
+        termFreq[term] = (termFreq[term] || 0) + 1;
       }
     });
 
-    // Extract the term from a cell
+    // Set default background color for cells in columns 1–5 only if the term appears more than once; otherwise, white.
+    cells.forEach(cell => {
+      if (cell.cellIndex < 5) {
+        const term = cell.querySelector('.term').innerText.trim();
+        if (termFreq[term] > 1) {
+          cell.style.backgroundColor = getColorForTerm(term);
+        } else {
+          cell.style.backgroundColor = "#ffffff";
+        }
+      }
+    });
+
+    // Extract the term from a cell.
     function extractTerm(cell) {
       const termElem = cell.querySelector('.term');
       return termElem ? termElem.innerText.trim() : cell.textContent.trim();
     }
 
-    // Hover events for columns 1–5 only
+    // Add hover event listeners for cells in columns 1–5 only.
     cells.forEach(cell => {
       if (cell.cellIndex < 5) {
         cell.addEventListener('mouseover', function() {

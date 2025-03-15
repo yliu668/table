@@ -37,7 +37,7 @@
 </head>
 <body>
   <h1>Creativity Ontology Table</h1>
-  <p style="text-align: center;">Hover over any term to highlight matching terms across the table.</p>
+  <p style="text-align: center;">Hover over any term to highlight matching terms (ignoring ratings) across the table.</p>
   <table id="dataTable">
     <thead>
       <tr>
@@ -145,14 +145,21 @@
   </table>
 
   <script>
-    // Get all cells with the class "word"
+    // Select all cells with the class "word"
     const cells = document.querySelectorAll('td.word');
-    // For each cell, add mouseover and mouseout event listeners
+
+    // Function to extract the term portion using a regular expression
+    function extractTerm(cellText) {
+      const match = cellText.match(/^(.*?)\s*\(/);
+      return match ? match[1].trim() : cellText.trim();
+    }
+
+    // Add event listeners for mouseover and mouseout on each cell
     cells.forEach(cell => {
       cell.addEventListener('mouseover', function() {
-        const text = this.textContent;
+        const term = extractTerm(this.textContent);
         cells.forEach(c => {
-          if (c.textContent === text) {
+          if (extractTerm(c.textContent) === term) {
             c.classList.add('highlight');
           }
         });
@@ -164,4 +171,5 @@
   </script>
 </body>
 </html>
+
 

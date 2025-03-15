@@ -23,12 +23,22 @@
     }
     th, td {
       border: 1px solid #ccc;
-      padding: 8px 12px;
+      padding: 10px 12px;
       text-align: center;
       font-size: 0.9em;
+      vertical-align: middle;
     }
     th {
       background-color: #ddd;
+    }
+    .term {
+      font-weight: bold;
+      display: block;
+    }
+    .stats {
+      font-size: 0.8em;
+      color: #555;
+      display: block;
     }
     .highlight {
       background-color: #ffeb3b; /* Yellow highlight */
@@ -145,21 +155,30 @@
   </table>
 
   <script>
-    // Select all cells with the class "word"
+    // Reformat each cell: split term and stats into two separate lines.
     const cells = document.querySelectorAll('td.word');
+    cells.forEach(cell => {
+      const regex = /^(.*?)\s*(\(.+\))$/;
+      const match = cell.textContent.match(regex);
+      if (match) {
+        const termText = match[1].trim();
+        const statsText = match[2].trim();
+        cell.innerHTML = `<div class="term">${termText}</div><div class="stats">${statsText}</div>`;
+      }
+    });
 
-    // Function to extract the term portion using a regular expression
-    function extractTerm(cellText) {
-      const match = cellText.match(/^(.*?)\s*\(/);
-      return match ? match[1].trim() : cellText.trim();
+    // Function to extract the term portion from a cell.
+    function extractTerm(cell) {
+      const termElem = cell.querySelector('.term');
+      return termElem ? termElem.innerText.trim() : cell.textContent.trim();
     }
 
-    // Add event listeners for mouseover and mouseout on each cell
+    // Add event listeners for hover highlighting.
     cells.forEach(cell => {
       cell.addEventListener('mouseover', function() {
-        const term = extractTerm(this.textContent);
+        const term = extractTerm(this);
         cells.forEach(c => {
-          if (extractTerm(c.textContent) === term) {
+          if (extractTerm(c) === term) {
             c.classList.add('highlight');
           }
         });

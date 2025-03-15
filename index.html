@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Creativity Ontology Table</title>
   <style>
     body {
@@ -28,7 +28,6 @@
       font-size: 0.9em;
       vertical-align: middle;
       box-sizing: border-box;
-      transition: filter 0.2s ease-in-out, outline 0.2s ease-in-out;
     }
     th {
       background-color: #ddd;
@@ -47,17 +46,17 @@
       display: block;
       margin-top: 4px;
     }
-    /* Hover effect: use an outline and brightness change without shifting layout */
+    /* Subtle hover highlight: a 2px outline (no layout shift) */
     .hover-highlight {
-      outline: 3px solid #333;
-      filter: brightness(1.2);
+      outline: 2px solid #444;
+      outline-offset: -2px; /* Keeps the outline inside the cell */
     }
   </style>
 </head>
 <body>
   <h1>Creativity Ontology Table</h1>
   <p style="text-align: center;">
-    Cells in columns 1–5 are color-coded by term. Hover over them to see a subtle effect.
+    Columns 1–5 are softly color-coded by term. Hover over them to see a subtle effect.
   </p>
   <table id="dataTable">
     <thead>
@@ -176,33 +175,30 @@
   </table>
 
   <script>
-    // Define a distinct, vivid color palette.
+    // A gentle pastel color palette for columns 1–5
     const colors = [
-      "#8e44ad", // Purple
-      "#27ae60", // Green
-      "#2980b9", // Blue
-      "#d35400", // Orange
-      "#c0392b", // Red
-      "#16a085", // Teal
-      "#f39c12", // Gold
-      "#2c3e50", // Dark Blue
-      "#e74c3c", // Bright Red
-      "#9b59b6", // Light Purple
-      "#1abc9c", // Light Teal
-      "#f1c40f"  // Yellow Gold
+      "#d6eadf", // pastel green
+      "#fde2e4", // very light red
+      "#cfe3fc", // soft blue
+      "#fdf2d0", // soft yellow
+      "#e8d4f0", // lavender
+      "#e2ece9", // grayish mint
+      "#fae1dd", // pale peach
+      "#ebeff9", // pale periwinkle
+      "#ffdcdc", // pastel pinkish
+      "#dff9fb"  // pale aqua
     ];
 
-    // Simple hash function to assign a color based on the term.
+    // Simple hash function to assign a color based on the term
     function getColorForTerm(term) {
       let hash = 0;
       for (let i = 0; i < term.length; i++) {
         hash = term.charCodeAt(i) + ((hash << 5) - hash);
       }
-      const index = Math.abs(hash) % colors.length;
-      return colors[index];
+      return colors[Math.abs(hash) % colors.length];
     }
 
-    // Reformat each cell: split term and stats into two separate lines.
+    // Reformat cells: put the term in bold, stats in smaller text
     const cells = document.querySelectorAll('td.word');
     cells.forEach(cell => {
       const regex = /^(.*?)\s*(\(.+\))$/;
@@ -214,7 +210,7 @@
       }
     });
 
-    // Set default background color for cells in columns 1–5 based on their term.
+    // Assign a pastel background color to columns 1–5 based on the term
     cells.forEach(cell => {
       if (cell.cellIndex < 5) {
         const term = cell.querySelector('.term').innerText.trim();
@@ -222,13 +218,13 @@
       }
     });
 
-    // Function to extract the term from a cell.
+    // Extract the term from a cell
     function extractTerm(cell) {
       const termElem = cell.querySelector('.term');
       return termElem ? termElem.innerText.trim() : cell.textContent.trim();
     }
 
-    // Add hover event listeners for cells in columns 1–5 only.
+    // Hover events for columns 1–5 only
     cells.forEach(cell => {
       if (cell.cellIndex < 5) {
         cell.addEventListener('mouseover', function() {

@@ -27,16 +27,14 @@
       text-align: center;
       font-size: 0.9em;
       vertical-align: middle;
-      position: relative;
-      transition: all 0.2s ease-in-out;
+      box-sizing: border-box;
     }
     th {
       background-color: #ddd;
     }
-    /* Add a thicker border after the originality column (5th column) */
-    th:nth-child(5),
-    td:nth-child(5) {
-      border-right: 3px solid #aaa;
+    /* Create a distinct gap between the first 5 columns and the last 2 */
+    th:nth-child(5), td:nth-child(5) {
+      border-right: 5px solid #000;
     }
     .term {
       font-weight: bold;
@@ -47,9 +45,9 @@
       color: #555;
       display: block;
     }
-    /* Hover effect: add a border and brightness */
+    /* Hover effect: use an outline and brightness change (without affecting layout) */
     .hover-highlight {
-      border: 2px solid #333 !important;
+      outline: 3px solid #333;
       filter: brightness(1.1);
     }
   </style>
@@ -57,7 +55,7 @@
 <body>
   <h1>Creativity Ontology Table</h1>
   <p style="text-align: center;">
-    Cells are colored by term (ignoring stats). Hover over any cell to see a special effect.
+    Cells in columns 1–5 are color-coded by term. Hover over them to see a special effect.
   </p>
   <table id="dataTable">
     <thead>
@@ -72,6 +70,7 @@
       </tr>
     </thead>
     <tbody>
+      <!-- Row 1 -->
       <tr>
         <td class="word">divergent thinking/generation (M=5.31, SD=1.06)</td>
         <td class="word">implementation (M=5.37, SD=1.15)</td>
@@ -81,6 +80,7 @@
         <td class="word">novel/original (M=5.74, SD=0.71)</td>
         <td class="word">cognitively flexible (M=5.41, SD=0.88)</td>
       </tr>
+      <!-- Row 2 -->
       <tr>
         <td class="word">ideation (M=5.13, SD=1.2)</td>
         <td class="word">problem finding/identification (M=4.92, SD=1.28)</td>
@@ -90,6 +90,7 @@
         <td class="word">unique (M=5.25, SD=1.08)</td>
         <td class="word">curious (M=5.39, SD=0.95)</td>
       </tr>
+      <!-- Row 3 -->
       <tr>
         <td class="word">exploration (M=5.05, SD=1.03)</td>
         <td class="word">validation/verification (M=4.82, SD=1.33)</td>
@@ -99,6 +100,7 @@
         <td class="word">unconventional (M=4.86, SD=1.22)</td>
         <td class="word">open to experience (M=5.37, SD=1.07)</td>
       </tr>
+      <!-- Row 4 -->
       <tr>
         <td class="word">problem finding/identification (M=4.95, SD=1.14)</td>
         <td class="word">drafting/prototyping (M=4.82, SD=1.37)</td>
@@ -108,6 +110,7 @@
         <td class="word">appropriate/relevant (M=4.84, SD=1.28)</td>
         <td class="word">imaginative (M=5.36, SD=0.89)</td>
       </tr>
+      <!-- Row 5 -->
       <tr>
         <td class="word">associative thinking (M=4.74, SD=1.21)</td>
         <td class="word">redesigning/remaking (M=4.81, SD=1.27)</td>
@@ -117,6 +120,7 @@
         <td class="word">surprising (M=4.68, SD=1.26)</td>
         <td class="word">tolerant of ambiguity (M=5.02, SD=1.07)</td>
       </tr>
+      <!-- Row 6 -->
       <tr>
         <td class="word">convergent thinking/evaluation (M=4.66, SD=1.29)</td>
         <td class="word">convergent thinking/evaluation (M=4.78, SD=1.21)</td>
@@ -126,6 +130,7 @@
         <td class="word">groundbreaking (M=4.66, SD=1.33)</td>
         <td class="word">intrinsically motivated (M=4.87, SD=1.3)</td>
       </tr>
+      <!-- Row 7 -->
       <tr>
         <td class="word">problem representation/construction (M=4.63, SD=1.23)</td>
         <td class="word">problem representation/construction (M=4.76, SD=1.29)</td>
@@ -135,6 +140,7 @@
         <td class="word">useful (M=4.6, SD=1.32)</td>
         <td class="word">open to intellect (M=4.77, SD=1.22)</td>
       </tr>
+      <!-- Row 8 -->
       <tr>
         <td class="word">reconceptualizing/reframing (M=4.62, SD=1.13)</td>
         <td class="word">divergent thinking/generation (M=4.67, SD=1.26)</td>
@@ -144,6 +150,7 @@
         <td class="word">valuable (M=4.49, SD=1.47)</td>
         <td class="word">persistent (M=4.69, SD=1.28)</td>
       </tr>
+      <!-- Row 9 -->
       <tr>
         <td class="word">combination (M=4.36, SD=1.23)</td>
         <td class="word">reconceptualizing/reframing (M=4.64, SD=1.21)</td>
@@ -153,6 +160,7 @@
         <td class="word">effective (M=4.46, SD=1.42)</td>
         <td class="word">risk taking (M=4.69, SD=1.22)</td>
       </tr>
+      <!-- Row 10 -->
       <tr>
         <td class="word">question asking (M=4.29, SD=1.32)</td>
         <td class="word">transformation (M=4.49, SD=1.37)</td>
@@ -166,7 +174,7 @@
   </table>
 
   <script>
-    // Color palette for default term backgrounds.
+    // Color palette for default term backgrounds (applied only to columns 1–5)
     const colors = ["#E8F1F2", "#F9E79F", "#AED6F1", "#D2B4DE", "#FADBD8", "#D5F5E3", "#FCF3CF"];
 
     // Simple hash function to assign a color based on the term.
@@ -191,10 +199,12 @@
       }
     });
 
-    // Set default background color for each cell based on its term.
+    // Set default background color for cells in columns 1–5 based on their term.
     cells.forEach(cell => {
-      const term = cell.querySelector('.term').innerText.trim();
-      cell.style.backgroundColor = getColorForTerm(term);
+      if (cell.cellIndex < 5) {
+        const term = cell.querySelector('.term').innerText.trim();
+        cell.style.backgroundColor = getColorForTerm(term);
+      }
     });
 
     // Function to extract the term from a cell.
@@ -203,22 +213,29 @@
       return termElem ? termElem.innerText.trim() : cell.textContent.trim();
     }
 
-    // Add event listeners to add a hover effect.
+    // Add event listeners for hover highlighting for cells in columns 1–5 only.
     cells.forEach(cell => {
-      cell.addEventListener('mouseover', function() {
-        const term = extractTerm(this);
-        cells.forEach(c => {
-          if (extractTerm(c) === term) {
-            c.classList.add('hover-highlight');
-          }
+      if (cell.cellIndex < 5) {
+        cell.addEventListener('mouseover', function() {
+          const term = extractTerm(this);
+          cells.forEach(c => {
+            if (c.cellIndex < 5 && extractTerm(c) === term) {
+              c.classList.add('hover-highlight');
+            }
+          });
         });
-      });
-      cell.addEventListener('mouseout', function() {
-        cells.forEach(c => c.classList.remove('hover-highlight'));
-      });
+        cell.addEventListener('mouseout', function() {
+          cells.forEach(c => {
+            if (c.cellIndex < 5) {
+              c.classList.remove('hover-highlight');
+            }
+          });
+        });
+      }
     });
   </script>
 </body>
 </html>
+
 
 

@@ -27,9 +27,16 @@
       text-align: center;
       font-size: 0.9em;
       vertical-align: middle;
+      position: relative;
+      transition: all 0.2s ease-in-out;
     }
     th {
       background-color: #ddd;
+    }
+    /* Add a thicker border after the originality column (5th column) */
+    th:nth-child(5),
+    td:nth-child(5) {
+      border-right: 3px solid #aaa;
     }
     .term {
       font-weight: bold;
@@ -40,21 +47,25 @@
       color: #555;
       display: block;
     }
-    .highlight {
-      background-color: #ffeb3b; /* Yellow highlight */
+    /* Hover effect: add a border and brightness */
+    .hover-highlight {
+      border: 2px solid #333 !important;
+      filter: brightness(1.1);
     }
   </style>
 </head>
 <body>
   <h1>Creativity Ontology Table</h1>
-  <p style="text-align: center;">Hover over any term to highlight matching terms (ignoring ratings) across the table.</p>
+  <p style="text-align: center;">
+    Cells are colored by term (ignoring stats). Hover over any cell to see a special effect.
+  </p>
   <table id="dataTable">
     <thead>
       <tr>
         <th>creativity as a process</th>
         <th>innovation</th>
         <th>imagination</th>
-        <th>problem</th>
+        <th>problem solving</th>
         <th>originality</th>
         <th>creativity as the attribute of a product</th>
         <th>creativity as the attribute of a person or agent</th>
@@ -155,6 +166,19 @@
   </table>
 
   <script>
+    // Color palette for default term backgrounds.
+    const colors = ["#E8F1F2", "#F9E79F", "#AED6F1", "#D2B4DE", "#FADBD8", "#D5F5E3", "#FCF3CF"];
+
+    // Simple hash function to assign a color based on the term.
+    function getColorForTerm(term) {
+      let hash = 0;
+      for (let i = 0; i < term.length; i++) {
+        hash = term.charCodeAt(i) + ((hash << 5) - hash);
+      }
+      const index = Math.abs(hash) % colors.length;
+      return colors[index];
+    }
+
     // Reformat each cell: split term and stats into two separate lines.
     const cells = document.querySelectorAll('td.word');
     cells.forEach(cell => {
@@ -167,24 +191,30 @@
       }
     });
 
-    // Function to extract the term portion from a cell.
+    // Set default background color for each cell based on its term.
+    cells.forEach(cell => {
+      const term = cell.querySelector('.term').innerText.trim();
+      cell.style.backgroundColor = getColorForTerm(term);
+    });
+
+    // Function to extract the term from a cell.
     function extractTerm(cell) {
       const termElem = cell.querySelector('.term');
       return termElem ? termElem.innerText.trim() : cell.textContent.trim();
     }
 
-    // Add event listeners for hover highlighting.
+    // Add event listeners to add a hover effect.
     cells.forEach(cell => {
       cell.addEventListener('mouseover', function() {
         const term = extractTerm(this);
         cells.forEach(c => {
           if (extractTerm(c) === term) {
-            c.classList.add('highlight');
+            c.classList.add('hover-highlight');
           }
         });
       });
       cell.addEventListener('mouseout', function() {
-        cells.forEach(c => c.classList.remove('highlight'));
+        cells.forEach(c => c.classList.remove('hover-highlight'));
       });
     });
   </script>
